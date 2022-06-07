@@ -1,0 +1,247 @@
+:root
+{
+    --content-width: 60rem;
+
+    --default-400: #535866;
+    --default-500: #323746;
+    --default-800: #1D2437;
+    --accent-500: #666053;
+
+    --white-500: #E6E6E6;
+    
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--white-500);
+}
+
+/*
+* Base Styling
+*/
+
+::selection
+{
+    background-color: var(--accent-500);
+    color: black;
+}
+
+html
+{
+    height: 100%;
+}
+
+body
+{
+    background-color: var(--default-800);
+    min-height: 100%;
+    position:relative;
+}
+
+h1, h2, h3
+{
+    font-family: 'Jura', sans-serif;
+}
+
+h1, h2
+{
+    font-variant: small-caps;
+    font-weight: 700;
+}
+
+h1
+{
+    font-size: clamp(2rem, 8vw, 6rem);
+}
+
+h2
+{
+    font-size: 2rem;
+    margin-block: 1rem;
+}
+
+h3
+{
+    margin-block: 1.5rem 1rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+p, ul
+{
+    line-height: 2.1;
+}
+
+p
+{
+    margin-block: 1rem;
+}
+
+a
+{
+    color: inherit;
+}
+
+/*
+* Layout Styling
+*/
+
+section, footer
+{
+    padding-inline: max(clamp(1.5rem, 4vw, 2rem), calc((100% - var(--content-width)) / 2));
+}
+
+section
+{
+    padding-block: 3.5rem;
+    position: relative;
+}
+
+footer
+{
+    background-color: var(--default-400);
+    padding-block: 2rem;
+}
+
+/*
+* Utility Styling
+*/
+
+.center
+{
+    text-align: center;
+    margin-inline: auto;
+}
+
+.block
+{
+    display: block;
+}
+
+/*
+* Theme Styling
+*/
+
+.important
+{
+    background-color: var(--default-400);
+}
+
+.contemplative
+{
+    background-color: var(--default-500);
+}
+
+.outline
+{
+    outline: 1px solid var(--outline-color, var(--accent-500));
+    outline-offset: var(--outline-offset, 1rem);
+}
+
+section::before
+{
+    content: '';
+    width: max(80%, 50rem);
+    height: 100%;
+    /* background-color: red;
+    border: 1px solid blue; */
+    background-image: url(skyshot.png);
+    mix-blend-mode: screen;
+    opacity: 0.2;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    /* z-index: -1; */
+}
+
+section >  *
+{
+    position: relative;
+    z-index: 1;
+}
+
+
+/*
+* Item Styling
+*/
+
+.hero
+{
+    --pic-size: 25rem;
+}
+
+.hero-img
+{
+    display: block;
+    margin-inline: auto;
+    width: var(--pic-size);
+    max-width: 100%;
+    shape-margin: 20rem;
+    shape-outside: circle(50%);
+    clip-path: circle(50%);
+    position: relative;
+    z-index: 1;
+    border: 1rem solid var(--accent-500);
+    border-radius: 100vh;
+    /* transform: translateX(-5rem); */
+}
+
+.hero-img > *
+{
+    width: var(--pic-size);
+    aspect-ratio: 1;
+    clip-path: circle(50%);
+    shape-outside: circle(50%);
+}
+
+.hero-text
+{
+    --outline-offset: 2rem;
+    --outline-color: rgba(0, 0, 0, 0);
+}
+
+.demo-vid
+{
+    aspect-ratio: 1.33;
+    width: min(calc(100% - 1rem), 30rem);
+    display: block;
+    margin-block: 3rem;
+}
+
+@media screen and (min-width: 45rem) {
+    .hero
+    {        
+        margin-block: 4rem;
+    }
+
+    .hero-img
+    {
+        float: right;
+        shape-outside: circle(50%);
+        clip-path: circle(50%);
+        position: relative;
+        z-index: 1;
+        border: 1rem solid var(--accent-500);
+        border-radius: 100vh;
+        /* transform: translateX(-5rem); */
+    }
+    
+    .hero-img > *
+    {
+        width: var(--pic-size);
+        aspect-ratio: 1;
+        clip-path: circle(50%);
+        shape-outside: circle(50%);
+    }
+
+    .hero-text
+    {
+        width: calc(100% - var(--pic-size) + 5rem);
+        padding-top: 5rem;
+    }
+
+    .hero-text
+    {
+        --outline-color: var(--accent-500);
+    }
+}

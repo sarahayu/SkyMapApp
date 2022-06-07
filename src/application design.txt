@@ -1,0 +1,17 @@
+Key questions
+	What happens when two buttons pressed?
+	do we need to keep track of the first byte of the packet
+		its always the same?
+	how big is "too big" for the interupt handlers
+	
+
+decoding method idea 1
+	falling edge interupt handler
+		record time in an array
+		dont record if array full
+		if array is "large enough" set a bit to indicate start of decoding. 
+		reset timer
+		
+	~50 ms timer interupt
+		set a bit to indicate that indicates input repitition has stopped
+

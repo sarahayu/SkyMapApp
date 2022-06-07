@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky-Map App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;700&family=Roboto:wght@300&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+    <section>
+        <h1 class="center">✨ Sky-Map App ✨</h1>
+        <h3 class="center">By Pranav Kharche & Sarah Yuniar</h3>
+        <div class="hero">
+            <div class="hero-img"><img class="" src="full_view.jpg" alt="Picture of TI launchpad with OLED attached">
+            </div>
+            <div class="hero-text">
+                <div class="outline">
+                    <h2>Description</h2>
+                    <p>Our goal was to be able to render to the OLED what stars would be visible in the sky depending on
+                        the orientation of a Texas Instrument launchpad. This involved creating a backend API to do the
+                        calculation of what stars would be visible given an orientation (azimuth, altitude, roll),
+                        viewport, and time, and return a list of screen coordinates of the stars and constellations. In
+                        addition, it involved configuring additional sensors to the launchpad, namely a gyroscope, which
+                        is not available on-board, to get the correct orientation of the board.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="important">
+        <h2>Features</h2>
+        <ul>
+            <li>
+                Tilting to see stars at a given position in the sky
+                <ul>
+                    <li>3 degrees of freedom. Location fixed to Davis, CA. Time set to current +/- an offset</li>
+                </ul>
+            </li>
+            <li>
+                Freeze-framing current position for closer examination
+                <ul>
+                    <li>Display no longer dependant on orientation</li>
+                    <li>Using a remote to manually shift the azimuth or altitude.</li>
+                </ul>
+            </li>
+            <li>Using a remote to change hour offset from current time</li>
+            <li>A button to set the current direction as north.</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Video Demo</h2>
+        <iframe class="outline center demo-vid" src="https://youtube.com/embed/v9ToQRDjLjc">
+        </iframe>
+    </section>
+    <section class="contemplative">
+        <h2>Discussion</h2>
+        <h3>Gyroscope and Accelerometer</h3>
+        <p>The application used Invensense’s MPU 6050 to understand the device’s orientation in space. This sensor
+            package includes a 3-axis accelerometer, a 3-axis gyroscope, and a digital motion processor (DMP). The
+            accelerometers provided an accurate vector for gravity, from which the altitude and roll can easily be
+            derived. The DMP continuously samples the sensors, calculates the rotation from the initial position, and
+            returns this information as a quaternion. This can be used to get the azimuth. While the quaternion could be
+            used to get the complete orientation, the accuracy of the gyroscope was very low, which meant that
+            integration error added up quickly. It was more reliable to use the raw accelerometer data for altitude and
+            roll.
+        </p>
+        <p>Communication with the sensor was done over an I2C bus. The accelerometer data can be read directly from the
+            sensor registers. The DMP periodically places its data into a FIFO which can be read from in bursts. Each
+            data packet is 42 bytes and consists of 4 floats for the quaternion, 3 32-bit integers for the gyroscope
+            data, 3 32-bit integers for the accelerometer data, and two bytes of garbage.
+        </p>
+        <h3>IR Receiver</h3>
+        <p>To receive user input from an IR remote, the Vishay TSOP31336 IR receiver was used. The output of the module
+            was sent to a GPIO pin configured with a falling edge interrupt. The systick timer was used to measure the
+            time between falling edges and then interpret the incoming data.
+        </p>
+        <h3>API Backend</h3>
+        <p>We could not find an online API that achieved our specific purposes, so we decided to write our own using
+            Python and Flask. Luckily, there was a Python library we found named Skyfield that greatly simplified
+            fetching required star/constellation databases and calculating star positions in the sky at a given point in
+            time. From there, we coded a Flask backend that accepted POST requests containing viewport data like
+            azimuth, altitude, roll, and FOV, as well as time data stating how many minutes from current epoch the user
+            would like to fetch star data for. Then, using Skyfield, we returned a CSV string with data about the stars
+            and constellation lines in screen space coordinates.
+        </p>
+    </section>
+    <section>
+        <h2>Bugs and known issues 🐞</h2>
+        <ul>
+            <li><b>Gyroscope accuracy:</b> The accuracy of the gyroscope is not very good and the integration error adds
+                up quickly. This can be resolved by a better sensor.</li>
+            <li><b>I2C bus error:</b> Sometimes, if the launchpad is reset while the I2C bus is transmitting, the module
+                goes into an unrecoverable state and the launchpad must be power-cycled to restore functionality.</li>
+            <li><b>HTTP backlog:</b> Despite the functions returning success every time, the HTTP responses would
+                occasionally backlog. This caused the stars that were being shown on the OLED to be from two or three
+                frames before. Then, on the next frame draw, it would render star information that was supposed to be
+                shown in the previous frame, and etc.</li>
+            <li><b>Wifi module timeout:</b> After 2-3 minutes of continuous runtime, the wifi module suddenly stops
+                responding and the program freezes. The cause of this is unknown but resetting the device resolves it.
+            </li>
+        </ul>
+
+    </section>
+    <section class="contemplative">        
+        <h2>Resources</h2>
+        <h3>Invensense 6050 (accel, gyro, and motion processor)</h3>
+        <ul>
+            <li><a href="invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf">MPU 6050 product
+                    specifications</a></li>
+            <li><a href="invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf">MPU 6050 register
+                    map</a></li>
+            <li><a href="github.com/jrowberg/i2cdevlib">Jeff Rowberg’s github repo for I2C devices</a></li>
+            <li><a href="www.i2cdevlib.com/docs/html/class_m_p_u6050.html#ad96c7a75a39327ebaae01386bcbc58dd">MPU 6050
+                    library function descriptions</a></li>
+            <li><a href="mjwhite8119.github.io/Robots/mpu6050">Martin White’s explanation of using the MPU6050</a></li>
+            <li><a href="github.com/Protonerd/DIYino/blob/master/MPU6050_calibration.ino">András Kun’s calibration
+                    software</a></li>
+            <li><a href="www.digikey.com/en/pdf/i/invensense/mpu-hardware-offset-registers">Invensense datasheet on
+                    sensor calibration</a></li>
+        </ul>
+        <h3>
+            API</h3>
+        <ul>
+
+            <li><a href="https://rhodesmill.org/skyfield">Skyfield Python Library</a></li>
+            <li><a href="https://flask.palletsprojects.com/en/2.1.x/">Python Flask</a></li>
+        </ul>
+    </section>
+    <footer class="center">
+        <span class="block"><b>Spring 2022</b></span>
+        <a href="http://github.com">GitHub</a>
+    </footer>
+</body>
+
+</html>
