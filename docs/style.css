@@ -92,7 +92,7 @@ section, footer
 
 section
 {
-    padding-block: 3.5rem;
+    padding-block: 1.5rem;
     position: relative;
 }
 
@@ -134,6 +134,11 @@ footer
     align-items: center;
     justify-content: center;
     gap: 1rem 0;
+}
+
+.m-top-2-mobile
+{
+    margin-top: 2rem;
 }
 
 /*
@@ -191,32 +196,29 @@ section >  *
 
 .hero-img
 {
-    display: block;
-    margin-inline: auto;
-    width: var(--pic-size);
-    max-width: 100%;
-    shape-margin: 20rem;
-    shape-outside: circle(50%);
-    clip-path: circle(50%);
     position: relative;
+    shape-outside: circle(50%);
     z-index: 1;
-    border: 1rem solid var(--accent-500);
-    border-radius: 100vh;
     /* transform: translateX(-5rem); */
 }
 
 .hero-img > *
 {
+    display: block;
+    margin-inline: auto;
     width: var(--pic-size);
     aspect-ratio: 1;
+    width: var(--pic-size);
+    max-width: 100%;
     clip-path: circle(50%);
-    shape-outside: circle(50%);
+    border: 1rem solid var(--accent-500);
+    border-radius: 100vh;
 }
 
-.hero-text
+.hero-text h2
 {
-    --outline-offset: 2rem;
-    --outline-color: rgba(0, 0, 0, 0);
+    --line-hang: 1rem;
+    border-bottom: 1px solid var(--accent-500);
 }
 
 .demo-vid
@@ -229,12 +231,22 @@ section >  *
 
 @media screen and (min-width: 45rem) {
 
+    section
+    {
+        padding-block: 3.5rem;
+    }
+
     .grid-2
     {
         display: grid;
         grid-template-columns: auto 1fr;
         align-items: center;
         gap: 0 var(--gap, 1rem);
+    }
+
+    .m-top-2-mobile
+    {
+        margin-top: 0;
     }
 
     .hero
@@ -245,31 +257,27 @@ section >  *
     .hero-img
     {
         float: right;
-        shape-outside: circle(50%);
-        clip-path: circle(50%);
         position: relative;
         z-index: 1;
-        border: 1rem solid var(--accent-500);
-        border-radius: 100vh;
+        padding-left: 1rem;
         /* transform: translateX(-5rem); */
     }
     
     .hero-img > *
     {
         width: var(--pic-size);
-        aspect-ratio: 1;
-        clip-path: circle(50%);
-        shape-outside: circle(50%);
     }
 
     .hero-text
     {
         width: calc(100% - var(--pic-size) + 5rem);
-        padding-top: 5rem;
+        padding-top: 4rem;
     }
 
-    .hero-text
+    .hero-text h2
     {
-        --outline-color: var(--accent-500);
+        width: calc(100% + var(--line-hang));
+        transform: translateX(calc(-1 * var(--line-hang)));
+        padding-left: var(--line-hang);
     }
 }
