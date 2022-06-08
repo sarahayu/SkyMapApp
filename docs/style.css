@@ -5,7 +5,7 @@
     --default-400: #535866;
     --default-500: #323746;
     --default-800: #1D2437;
-    --accent-500: #666053;
+    --accent-500: #7B683F;
 
     --white-500: #E6E6E6;
     
@@ -170,8 +170,9 @@ section::before
     border: 1px solid blue; */
     background-image: url(skyshot.png);
     mix-blend-mode: screen;
-    opacity: 0.2;
+    opacity: 0.5;
     position: absolute;
+    background-size: 100% auto;
     top: 0;
     right: 0;
     bottom: 0;
